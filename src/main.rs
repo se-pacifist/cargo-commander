@@ -8,12 +8,14 @@ mod script;
 mod utils;
 
 use command::Command;
+use console::Term;
+use dialoguer::{theme::ColorfulTheme, FuzzySelect};
 use std::borrow::BorrowMut;
 use std::collections::HashMap;
 use std::path::PathBuf;
 
 #[cfg(feature = "gui")]
-fn gui() -> Result<(), std::io::Error> {
+fn gui(commands_map: HashMap<String, (PathBuf, Command)>) -> Result<(), std::io::Error> {
     let context = tauri::generate_context!();
     tauri::Builder::default()
         .menu(tauri::Menu::os_default(&context.package_info().name))
@@ -23,8 +25,31 @@ fn gui() -> Result<(), std::io::Error> {
 }
 
 #[cfg(not(feature = "gui"))]
-fn gui() -> Result<(), std::io::Error> {
+fn gui(mut commands_map: HashMap<String, (PathBuf, Command)>) -> Result<(), std::io::Error> {
     println!("No command provided, exiting.");
+
+    let mut items: Vec<String> = vec![];
+    for (key, _) in commands_map.iter_mut() {
+        let _ = &items.push(key.to_string());
+    }
+    items.sort();
+    let selection = FuzzySelect::with_theme(&ColorfulTheme::default())
+        .items(&items)
+        .default(0)
+        .interact_on_opt(&Term::stderr())?;
+
+    match selection {
+        Some(index) => {
+            let x: String = items.get(index).unwrap().clone();
+            match commands_map.remove_entry(&x) {
+                Some((_, (_, command))) => {
+                    let _ = command.execute(vec![]);
+                }
+                None => println!("Command not found"),
+            }
+        }
+        None => println!("User did not select anything"),
+    }
     Ok(())
 }
 
@@ -53,7 +78,7 @@ fn main() -> Result<(), std::io::Error> {
                     commander_args.insert("parallel".to_string(), args.remove(0));
                 } else if args[0] == "-h" || args[0] == "--help" {
                     println!(
-                        r"cargo-commander 2.0.15
+                        r"cargo-commander 2.0.16
 A powerful tool for managing project commands
 
 USAGE:
@@ -80,18 +105,18 @@ OPTIONS:
         }
     }
 
-    if command_args.len() == 0 {
-        return gui();
-    }
-
-    let command_name = command_args.remove(0);
-
     let mut commands_map: HashMap<String, (PathBuf, Command)> =
         if commander_args.contains_key("file") {
             utils::get_commands_map(commander_args.get("file"))
         } else {
             utils::get_commands_map(None)
         };
+
+    if command_args.len() == 0 {
+        return gui(commands_map);
+    }
+
+    let command_name = command_args.remove(0);
 
     if commander_args.contains_key("parallel") {
         for (_, (_, command)) in commands_map.iter_mut() {

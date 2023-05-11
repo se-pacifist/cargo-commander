@@ -9,6 +9,7 @@ The simple way of running commands
 [![GitHub last commit (branch)](https://img.shields.io/github/last-commit/simonhyll/cargo-commander/main)](https://github.com/simonhyll/cargo-commander/commit/main)
 [![Build and test](https://github.com/simonhyll/cargo-commander/actions/workflows/build.yml/badge.svg)](https://github.com/simonhyll/cargo-commander/actions/workflows/build.yml)
 [![Website](https://img.shields.io/website?down_color=red&down_message=offline&up_color=green&up_message=online&url=https%3A%2F%2Fsimonhyll.github.io%2Fcargo-commander%2F)](https://simonhyll.github.io/cargo-commander/)
+
 </div>
 
 ## Introduction
@@ -33,7 +34,7 @@ cargo install cargo-commander
 cargo cmd COMMAND
 
 # Output of 'cargo cmd --help'
-cargo-commander 2.0.15
+cargo-commander 2.0.16
 A powerful tool for managing project commands
 
 USAGE:

@@ -15,25 +15,33 @@ license-file = "LICENSE.txt"
 name = "cargo-commander"
 readme = "README.md"
 repository = "https://github.com/simonhyll/cargo-commander"
-version = "2.0.15"
+version = "2.0.16"
 default-run = "cargo-cmd"
 
 [[bin]]
 name = "cargo-cmd"
 path = "src/main.rs"
 
+[[bin]]
+name = "cargo-get"
+path = "src/get.rs"
+required-features = ["get"]
+
 [build-dependencies]
-tauri-build = {version = "1.0", features = [], optional = true}
+tauri-build = { version = "1.0", features = [], optional = true }
 
 [dependencies]
+dialoguer = { version = "=0.10", features = ["fuzzy-select"] }
+console = "0.15"
 dotenv = "0.15"
-reqwest = {version = "0.11", features = ["blocking"]}
-serde = {version = "1", features = ["derive"]}
+reqwest = { version = "0.11", features = ["blocking"] }
+serde = { version = "1", features = ["derive"] }
 serde_json = "1"
-tauri = {version = "1.0", features = ["api-all"], optional = true}
+tauri = { version = "1.0", features = ["api-all"], optional = true }
 tempfile = "3.3.0"
 toml = "0.5.8"
 
 [features]
 custom-protocol = ["tauri/custom-protocol"]
 gui = ["tauri", "tauri-build", "custom-protocol"]
+get = []

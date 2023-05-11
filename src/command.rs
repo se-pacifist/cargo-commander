@@ -392,7 +392,9 @@ impl From<&toml::Value> for Command {
                             }
                         }
                     }
-                    command_args.remove(0);
+                    if command_args.len() > 0 {
+                        command_args.remove(0);
+                    }
                     let oargs = command_args;
 
                     for a in oargs {
