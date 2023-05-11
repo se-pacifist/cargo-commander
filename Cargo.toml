@@ -1,0 +1,39 @@
+[package]
+authors = ["Simon Hyll <hyllsimon@gmail.com>"]
+categories = [
+  "development-tools",
+  "development-tools::cargo-plugins",
+  "command-line-utilities",
+]
+description = "Like npm scripts, but better"
+documentation = "https://github.com/simonhyll/cargo-commander/wiki"
+edition = "2021"
+exclude = [".idea", ".github", ".gitignore", "cargo-commander.iml"]
+homepage = "https://simonhyll.github.io/cargo-commander/"
+keywords = ["cargo", "commander", "cmd", "scripts", "commands"]
+license-file = "LICENSE.txt"
+name = "cargo-commander"
+readme = "README.md"
+repository = "https://github.com/simonhyll/cargo-commander"
+version = "2.0.15"
+default-run = "cargo-cmd"
+
+[[bin]]
+name = "cargo-cmd"
+path = "src/main.rs"
+
+[build-dependencies]
+tauri-build = {version = "1.0", features = [], optional = true}
+
+[dependencies]
+dotenv = "0.15"
+reqwest = {version = "0.11", features = ["blocking"]}
+serde = {version = "1", features = ["derive"]}
+serde_json = "1"
+tauri = {version = "1.0", features = ["api-all"], optional = true}
+tempfile = "3.3.0"
+toml = "0.5.8"
+
+[features]
+custom-protocol = ["tauri/custom-protocol"]
+gui = ["tauri", "tauri-build", "custom-protocol"]
